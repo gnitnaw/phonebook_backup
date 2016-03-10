@@ -80,8 +80,8 @@ int main(int argc, char *argv[])
     cpu_time2 = diff_in_second(start, end);
 
     FILE *output;
-#if defined(OPT)
-    output = fopen("opt.txt", "a");
+#if defined(OPT_SMALLER_STRUCT)
+    output = fopen("opt_SmallerStruct.txt", "a");
 #else
     output = fopen("orig.txt", "a");
 #endif
@@ -91,8 +91,9 @@ int main(int argc, char *argv[])
     printf("execution time of append() : %lf sec\n", cpu_time1);
     printf("execution time of findName() : %lf sec\n", cpu_time2);
 
-    if (pHead->pNext) free(pHead->pNext);
-    free(pHead);
-
+    freeEntry(pHead);
+    //if (pHead->pNext) free(pHead->pNext);
+    //free(pHead);
+    //pHead = NULL;
     return 0;
 }

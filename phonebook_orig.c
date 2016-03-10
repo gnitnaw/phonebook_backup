@@ -26,3 +26,17 @@ entry *append(char lastName[], entry *e)
 
     return e;
 }
+
+void freeEntry(entry *pHead)
+{
+    entry *e;
+    while(pHead->pNext !=NULL) {
+        e = pHead->pNext;
+        free(pHead);
+        pHead = e;
+    }
+    free(pHead);
+    e = NULL;
+    pHead = NULL;
+}
+
