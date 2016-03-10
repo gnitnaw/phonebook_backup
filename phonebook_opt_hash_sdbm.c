@@ -2,7 +2,7 @@
 #include <string.h>
 #include <ctype.h>
 
-#include "phonebook_opt_SmallerStruct.h"
+#include "phonebook_opt_hash_sdbm.h"
 
 /* FILL YOUR OWN IMPLEMENTATION HERE! */
 
@@ -11,8 +11,9 @@ static entry_otherdata* moreData;
 entry *findName(char lastname[], entry *pHead)
 {
     unsigned int nData = 0;
+    unsigned int name = SDBMHash(lastname);
     while (pHead != NULL) {
-        if (strcasecmp(lastname, pHead->lastName) == 0)
+        if (name == pHead->lastName_hash)
             return pHead;
         pHead = pHead->pNext;
         ++nData;
@@ -27,7 +28,7 @@ entry *append(char lastName[], entry *e)
     /* allocate memory for the new entry and put lastName */
     e->pNext = (entry *) malloc(sizeof(entry));
     e = e->pNext;
-    strcpy(e->lastName, lastName);
+    e->lastName_hash = SDBMHash(lastName);
     free(e->pNext);
     e->pNext = NULL;
 
@@ -47,5 +48,15 @@ void freeEntry(entry *pHead)
     free(pHead);
     e = NULL;
     pHead = NULL;
+}
+
+unsigned int SDBMHash(char *str)
+{
+    unsigned int hash = 0;
+    while (*str) {
+        // equivalent to: hash = 65599*hash + (*str++);
+        hash = (*str++) + (hash << 6) + (hash << 16) - hash;
+    }
+    return (hash & 0x7FFFFFFF);
 }
 

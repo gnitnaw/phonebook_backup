@@ -7,6 +7,7 @@
 #include IMPL
 
 #define DICT_FILE "./dictionary/words.txt"
+#define LINESIZE	32
 
 static double diff_in_second(struct timespec t1, struct timespec t2)
 {
@@ -66,9 +67,19 @@ int main(int argc, char *argv[])
     char input[MAX_LAST_NAME_SIZE] = "zyxel";
     e = pHead;
 
+#if defined(OPT_HASH_SDBM)
+    assert(findName(input, e) &&
+           "Did you implement findName() in " IMPL "?");
+    assert(findName(input, e)->lastName_hash==SDBMHash("zyxel"));
+#elif defined(OPT_HASH_BKDR)
+    assert(findName(input, e) &&
+           "Did you implement findName() in " IMPL "?");
+    assert(findName(input, e)->lastName_hash==BKDRHash("zyxel"));
+#else
     assert(findName(input, e) &&
            "Did you implement findName() in " IMPL "?");
     assert(0 == strcmp(findName(input, e)->lastName, "zyxel"));
+#endif
 
 #if defined(__GNUC__)
     __builtin___clear_cache((char *) pHead, (char *) pHead + sizeof(entry));
@@ -82,6 +93,10 @@ int main(int argc, char *argv[])
     FILE *output;
 #if defined(OPT_SMALLER_STRUCT)
     output = fopen("opt_SmallerStruct.txt", "a");
+#elif defined(OPT_HASH_SDBM)
+    output = fopen("opt_HashSdbm.txt", "a");
+#elif defined(OPT_HASH_BKDR)
+    output = fopen("opt_HashBkdr.txt", "a");
 #else
     output = fopen("orig.txt", "a");
 #endif

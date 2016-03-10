@@ -5,7 +5,12 @@ set title 'perfomance comparison'
 set term png enhanced font 'Verdana,10'
 set output 'runtime.png'
 
-plot [:][:0.100]'output.txt' using 2:xtic(1) with histogram title 'original', \
-'' using ($0-0.06):($2+0.001):2 with labels title ' ', \
-'' using 3:xtic(1) with histogram title 'optimized'  , \
-'' using ($0+0.3):($3+0.0015):3 with labels title ' '
+plot [:][:0.080]'output.txt' using 2:xtic(1) with histogram title 'original', \
+'' using ($0-0.11):($2+0.005):2 with labels title ' ', \
+'' using 3:xtic(1) with histogram title 'SmallerStruct'  , \
+'' using ($0+0.02):($3+0.01):3 with labels title ' ', \
+'' using 4:xtic(1) with histogram title 'HashSDBM'  , \
+'' using ($0+0.13):($4+0.015):4 with labels title ' ', \
+'' using 5:xtic(1) with histogram title 'HashBKDR'  , \
+'' using ($0+0.24):($5+0.02):5 with labels title ' '
+

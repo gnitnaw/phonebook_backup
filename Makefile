@@ -3,7 +3,7 @@ CFLAGS_common ?= -Wall -std=gnu99
 CFLAGS_orig = -O0
 CFLAGS_opt  = -O0
 
-EXEC = phonebook_orig phonebook_opt_SmallerStruct
+EXEC = phonebook_orig phonebook_opt_SmallerStruct phonebook_opt_hash_sdbm phonebook_opt_hash_bkdr
 all: $(EXEC)
 
 SRCS_common = main.c
@@ -15,6 +15,16 @@ phonebook_orig: $(SRCS_common) phonebook_orig.c phonebook_orig.h
 
 phonebook_opt_SmallerStruct: $(SRCS_common) phonebook_opt_SmallerStruct.c phonebook_opt_SmallerStruct.h
 	$(CC) $(CFLAGS_common) $(CFLAGS_opt) \
+		-DIMPL="\"$@.h\"" -o $@ \
+		$(SRCS_common) $@.c
+
+phonebook_opt_hash_sdbm: $(SRCS_common) phonebook_opt_hash_sdbm.c phonebook_opt_hash_sdbm.h
+	$(CC) $(CFLAGS_common) $(CFLAGS_orig) \
+		-DIMPL="\"$@.h\"" -o $@ \
+		$(SRCS_common) $@.c
+
+phonebook_opt_hash_bkdr: $(SRCS_common) phonebook_opt_hash_bkdr.c phonebook_opt_hash_bkdr.h
+	$(CC) $(CFLAGS_common) $(CFLAGS_orig) \
 		-DIMPL="\"$@.h\"" -o $@ \
 		$(SRCS_common) $@.c
 
@@ -33,6 +43,12 @@ cache-test: $(EXEC)
 	perf stat --repeat 100 \
 		-e cache-misses,cache-references,instructions,cycles \
 		./phonebook_opt_SmallerStruct
+	perf stat --repeat 100 \
+		-e cache-misses,cache-references,instructions,cycles \
+		./phonebook_opt_hash_sdbm
+	perf stat --repeat 100 \
+		-e cache-misses,cache-references,instructions,cycles \
+		./phonebook_opt_hash_bkdr
 
 output.txt: cache-test calculate
 	./calculate
