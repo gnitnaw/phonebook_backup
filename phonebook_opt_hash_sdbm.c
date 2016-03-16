@@ -10,16 +10,13 @@ static entry_otherdata* moreData;
 
 entry *findName(char lastname[], entry *pHead)
 {
-    unsigned int nData = 0;
     unsigned int name = SDBMHash(lastname);
     while (pHead != NULL) {
-        if (name == pHead->lastName_hash)
+        if (name == pHead->lastName_hash) {
             return pHead;
+        }
         pHead = pHead->pNext;
-        ++nData;
     }
-    moreData = (entry_otherdata*) malloc(sizeof(entry_otherdata)*nData);
-    pHead->other = &moreData[nData-1];
     return NULL;
 }
 
@@ -29,7 +26,7 @@ entry *append(char lastName[], entry *e)
     e->pNext = (entry *) malloc(sizeof(entry));
     e = e->pNext;
     e->lastName_hash = SDBMHash(lastName);
-    free(e->pNext);
+//    free(e->pNext);
     e->pNext = NULL;
 
     return e;

@@ -12,5 +12,7 @@ plot [:][:0.080]'output.txt' using 2:xtic(1) with histogram title 'original', \
 '' using 4:xtic(1) with histogram title 'HashSDBM'  , \
 '' using ($0+0.13):($4+0.015):4 with labels title ' ', \
 '' using 5:xtic(1) with histogram title 'HashBKDR'  , \
-'' using ($0+0.24):($5+0.02):5 with labels title ' '
+'' using ($0+0.24):($5+0.02):5 with labels title ' ', \
+'' using 6:xtic(1) with histogram title 'NewSize'  , \
+'' using ($0+0.35):($6+0.025):6 with labels title ' '
 

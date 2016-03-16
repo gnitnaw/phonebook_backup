@@ -1,9 +1,9 @@
 CC ?= gcc
 CFLAGS_common ?= -Wall -std=gnu99
-CFLAGS_orig = -O0
-CFLAGS_opt  = -O0
+CFLAGS_orig = -O3
+CFLAGS_opt  = -O3
 
-EXEC = phonebook_orig phonebook_opt_SmallerStruct phonebook_opt_hash_sdbm phonebook_opt_hash_bkdr
+EXEC = phonebook_orig phonebook_opt_SmallerStruct phonebook_opt_hash_sdbm phonebook_opt_hash_bkdr phonebook_opt_newSize
 all: $(EXEC)
 
 SRCS_common = main.c
@@ -19,12 +19,17 @@ phonebook_opt_SmallerStruct: $(SRCS_common) phonebook_opt_SmallerStruct.c phoneb
 		$(SRCS_common) $@.c
 
 phonebook_opt_hash_sdbm: $(SRCS_common) phonebook_opt_hash_sdbm.c phonebook_opt_hash_sdbm.h
-	$(CC) $(CFLAGS_common) $(CFLAGS_orig) \
+	$(CC) $(CFLAGS_common) $(CFLAGS_opt) \
 		-DIMPL="\"$@.h\"" -o $@ \
 		$(SRCS_common) $@.c
 
 phonebook_opt_hash_bkdr: $(SRCS_common) phonebook_opt_hash_bkdr.c phonebook_opt_hash_bkdr.h
-	$(CC) $(CFLAGS_common) $(CFLAGS_orig) \
+	$(CC) $(CFLAGS_common) $(CFLAGS_opt) \
+		-DIMPL="\"$@.h\"" -o $@ \
+		$(SRCS_common) $@.c
+
+phonebook_opt_newSize: $(SRCS_common) phonebook_opt_newSize.c phonebook_opt_newSize.h
+	$(CC) $(CFLAGS_common) $(CFLAGS_opt) \
 		-DIMPL="\"$@.h\"" -o $@ \
 		$(SRCS_common) $@.c
 
@@ -49,6 +54,9 @@ cache-test: $(EXEC)
 	perf stat --repeat 100 \
 		-e cache-misses,cache-references,instructions,cycles \
 		./phonebook_opt_hash_bkdr
+	perf stat --repeat 100 \
+		-e cache-misses,cache-references,instructions,cycles \
+		./phonebook_opt_newSize
 
 output.txt: cache-test calculate
 	./calculate

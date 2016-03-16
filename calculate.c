@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#define	NDATA	4
+#define	NDATA	5
 void read_file(char* fileName, double* opt_sum_a, double* opt_sum_f)
 {
 
@@ -39,6 +39,7 @@ int main(void)
     read_file("opt_SmallerStruct.txt", &avg_a[1], &avg_f[1]);
     read_file("opt_HashSdbm.txt", &avg_a[2], &avg_f[2]);
     read_file("opt_HashBkdr.txt", &avg_a[3], &avg_f[3]);
+    read_file("opt_NewSize.txt", &avg_a[4], &avg_f[4]);
 
     fprintf(output, "append()");
     for (i=0; i<NDATA; ++i) {

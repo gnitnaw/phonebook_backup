@@ -67,17 +67,17 @@ int main(int argc, char *argv[])
     char input[MAX_LAST_NAME_SIZE] = "zyxel";
     e = pHead;
 
-#if defined(OPT_HASH_SDBM)
     assert(findName(input, e) &&
            "Did you implement findName() in " IMPL "?");
+#if defined(OPT_HASH_SDBM)
     assert(findName(input, e)->lastName_hash==SDBMHash("zyxel"));
 #elif defined(OPT_HASH_BKDR)
-    assert(findName(input, e) &&
-           "Did you implement findName() in " IMPL "?");
     assert(findName(input, e)->lastName_hash==BKDRHash("zyxel"));
+#elif defined(OPT_NEW_SIZE)
+    assert(0 == strcmp(findName(input, e)->lastName, "zyxel"));
 #else
-    assert(findName(input, e) &&
-           "Did you implement findName() in " IMPL "?");
+//    assert(findName(input, e) &&
+//           "Did you implement findName() in " IMPL "?");
     assert(0 == strcmp(findName(input, e)->lastName, "zyxel"));
 #endif
 
@@ -97,6 +97,8 @@ int main(int argc, char *argv[])
     output = fopen("opt_HashSdbm.txt", "a");
 #elif defined(OPT_HASH_BKDR)
     output = fopen("opt_HashBkdr.txt", "a");
+#elif defined(OPT_NEW_SIZE)
+    output = fopen("opt_NewSize.txt", "a");
 #else
     output = fopen("orig.txt", "a");
 #endif
