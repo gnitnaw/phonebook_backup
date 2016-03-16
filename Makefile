@@ -1,7 +1,7 @@
 CC ?= gcc
 CFLAGS_common ?= -Wall -std=gnu99
-CFLAGS_orig = -O3
-CFLAGS_opt  = -O3
+CFLAGS_orig = -O0
+CFLAGS_opt  = -O0
 
 EXEC = phonebook_orig phonebook_opt_SmallerStruct phonebook_opt_hash_sdbm phonebook_opt_hash_bkdr phonebook_opt_newSize
 all: $(EXEC)
@@ -42,18 +42,27 @@ opt_SmallerStruct: $(EXEC)
 	watch -d -t "./phonebook_opt_SmallerStruct && echo 3 | sudo tee /proc/sys/vm/drop_caches"
 
 cache-test: $(EXEC)
+	sudo echo 1 | sudo tee /proc/sys/vm/drop_caches
 	perf stat --repeat 100 \
 		-e cache-misses,cache-references,instructions,cycles \
 		./phonebook_orig
+
+	sudo echo 1 | sudo tee /proc/sys/vm/drop_caches
 	perf stat --repeat 100 \
 		-e cache-misses,cache-references,instructions,cycles \
 		./phonebook_opt_SmallerStruct
+
+	sudo echo 1 | sudo tee /proc/sys/vm/drop_caches
 	perf stat --repeat 100 \
 		-e cache-misses,cache-references,instructions,cycles \
 		./phonebook_opt_hash_sdbm
+
+	sudo echo 1 | sudo tee /proc/sys/vm/drop_caches
 	perf stat --repeat 100 \
 		-e cache-misses,cache-references,instructions,cycles \
 		./phonebook_opt_hash_bkdr
+
+	sudo echo 1 | sudo tee /proc/sys/vm/drop_caches
 	perf stat --repeat 100 \
 		-e cache-misses,cache-references,instructions,cycles \
 		./phonebook_opt_newSize
